@@ -262,7 +262,6 @@ trait ExecutorScheduler { self: Scheduler =>
   val executorFactory: ThreadFactory => ExecutorService
 
   protected val threadGroup: ThreadGroup = new ThreadGroup(name)
-  @volatile private[this] var threads = Set[Thread]()
 
   protected val threadFactory: ThreadFactory = new ThreadFactory {
     private val n = new AtomicInteger(1)
