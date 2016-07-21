@@ -6,14 +6,16 @@ import java.util.concurrent.ConcurrentSkipListMap
 
 @deprecated("use guava's Multimaps.synchronizedMultimap", "6.2.x")
 class ConcurrentMultiMap[K <% Ordered[K], V <% Ordered[V]] {
-  class Container(k: K, v: Option[V])
-  // TODO: extending tuples is deprecated and will be removed in the next version.
-  // Remove this inheritance in the next major version
-  extends Tuple2[K, Option[V]](k, v)
-  with Comparable[Container]
+  class Container(val k: K, val v: Option[V])
+    extends Product2[K, Option[V]] // used to extend Tuple2 (now implements _1 and _2 directly)
+    with Comparable[Container]
   {
     def key   = k
     def value = v
+    def _1 = k
+    def _2 = v
+    def canEqual(that: Any): Boolean = that.isInstanceOf[Container]
+    override def equals(that: Any): Boolean = canEqual(that) && compareTo(that.asInstanceOf[Container]) == 0
 
     def isDefined = value.isDefined
 
